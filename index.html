@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>LoveOS Cinematic Edition</title>
+
+<style>
+body{
+margin:0;
+background:#000;
+color:#d4af37;
+font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", serif;
+overflow:hidden;
+text-align:center;
+}
+.page{display:none;padding:40px 20px;}
+.active{display:block;}
+h1{font-size:34px;margin:20px 0;}
+h2{font-size:22px;margin:15px 0;}
+p{font-size:18px;opacity:0.9;}
+button{
+background:linear-gradient(45deg,#d4af37,#f8e7a1);
+border:none;
+padding:14px 32px;
+font-size:18px;
+border-radius:30px;
+margin:20px;
+}
+.goldline{
+width:60%;
+height:1px;
+background:linear-gradient(to right,transparent,#d4af37,transparent);
+margin:25px auto;
+}
+img{
+width:85%;
+border-radius:15px;
+margin:15px 0;
+box-shadow:0 0 25px rgba(212,175,55,0.4);
+}
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+}
+.fade{animation:fadeIn 1.5s;}
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(20px);}
+to{opacity:1;transform:translateY(0);}
+}
+#startScreen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:10;
+}
+#startBtn{
+font-size:20px;
+padding:16px 40px;
+border-radius:30px;
+background:linear-gradient(45deg,#d4af37,#f8e7a1);
+border:none;
+}
+</style>
+</head>
+
+<body>
+
+<div id="startScreen">
+<h1>XX · LoveOS</h1>
+<p>点击开启人生发布会</p>
+<button id="startBtn">进入</button>
+</div>
+
+<canvas id="bg"></canvas>
+
+<audio id="bgm" loop>
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3f9bb7fd89.mp3" type="audio/mp3">
+</audio>
+
+<div id="page1" class="page">
+<h1>Marriage Stable Release</h1>
+<div class="goldline"></div>
+<h2>LoveOS v2.14</h2>
+<p>Loading Future...</p>
+</div>
+
+<div id="page2" class="page fade">
+<h1>Our Story</h1>
+<div class="goldline"></div>
+<img src="photo1.jpg">
+<img src="photo2.jpg">
+<img src="photo3.jpg">
+<p>我们相识 <span id="days"></span> 天</p>
+<button onclick="nextPage(3)">继续</button>
+</div>
+
+<div id="page3" class="page fade">
+<h1>System Analysis</h1>
+<div class="goldline"></div>
+<p>匹配度 99.99%</p>
+<p>幸福指数 MAX</p>
+<p>未来规划 一辈子</p>
+<p>目标：结婚 · 成家 · 白头</p>
+<button onclick="nextPage(4)">继续</button>
+</div>
+
+<div id="page4" class="page fade">
+<h1>Final Confirmation</h1>
+<div class="goldline"></div>
+<p>是否将 XX 设置为终身伴侣？</p>
+<button onclick="proposal()">YES</button>
+<button onclick="proposal()">YES</button>
+</div>
+
+<div id="page5" class="page fade">
+<h1>Marriage Mode Activated</h1>
+<div class="goldline"></div>
+<h2>请线下确认 ❤️</h2>
+</div>
+
+<script>
+const startBtn=document.getElementById("startBtn");
+const startScreen=document.getElementById("startScreen");
+const bgm=document.getElementById("bgm");
+
+startBtn.onclick=function(){
+bgm.play();
+startScreen.style.display="none";
+nextPage(1);
+setTimeout(()=>nextPage(2),4000);
+};
+
+function nextPage(num){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById('page'+num).classList.add('active');
+}
+
+function proposal(){
+heartExplosion();
+nextPage(5);
+}
+
+// 相识天数
+const startDate=new Date("2025-07-01");
+const today=new Date();
+const diff=Math.floor((today-startDate)/(1000*60*60*24));
+document.getElementById("days").innerText=diff;
+
+// 金色粒子背景
+const canvas=document.getElementById("bg");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+for(let i=0;i<120;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+r:Math.random()*2,
+d:Math.random()*1
+});
+}
+
+function draw(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="#d4af37";
+particles.forEach(p=>{
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctx.fill();
+p.y+=p.d;
+if(p.y>canvas.height)p.y=0;
+});
+requestAnimationFrame(draw);
+}
+draw();
+
+function heartExplosion(){
+for(let i=0;i<100;i++){
+particles.push({
+x:canvas.width/2,
+y:canvas.height/2,
+r:3,
+d:Math.random()*3+1
+});
+}
+}
+</script>
+
+</body>
+</html>
